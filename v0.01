@@ -1,0 +1,27 @@
+<?php
+header('Refresh:1');
+date_default_timezone_set('Europe/London');
+$t=time('H:i:s');
+$bt='254198699:AAGEi1ipAzzQK11cfPwjnvPRadZaW8TYj60';
+$url='https://api.telegram.org/bot'.$bt;
+$off=$url.'/getupdates?offset=';
+$get=file_get_contents($off);
+$arr=json_decode($get, TRUE);
+$len=count($arr['result']);
+$cid=$arr['result'][$len-1]['message']['chat']['id'];
+$txt=$arr['result'][$len-1]['message']['text'];
+$uid=$arr['result'][$len-1]['update_id'];
+$get=file_get_contents($off.($uid+1));
+$rep=$url.'/sendmessage?chat_id='.$cid.'&text=';
+
+if(stripos ($txt, 'hi') !== false)
+	{
+		file_get_contents($rep.'hi');
+	}
+
+if(stripos ($txt, '/bindec') !== false)
+	{
+		$cut = substr($txt,7);
+		$res = bindec($cut);
+		file_get_contents($rep.$cut.'='.$res);	
+	}	
